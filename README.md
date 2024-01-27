@@ -67,4 +67,4 @@ Adjust the project's configuration in the config directory, especially config.in
 Feel free to contribute to this project. Fork the repository, make your changes, and submit a pull request.
 
 ## License
-This project is licensed under the [MIT License](https://github.com/Git-Yousfi-Neji//processesStrangerDanger/LICENSE)
+This project is licensed under the [MIT License](LICENSE)
