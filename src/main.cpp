@@ -2,22 +2,35 @@
 #include <iostream>
 
 #include "../include/processManager.h"
+#include "../include/xml_parser.h"
+const char *filePath = "data/configs.xml";
 
 int main()
 {
-    struct SProcessInfo info;
     CProcessManager processManager;
-    
+
     int processIds[MAX_PROCESSES];
     int totalProcesses = processManager.countAndStoreProcesses(processIds);
-    
-    for(int i=0;i<totalProcesses;i++)
+    struct SProcessInfo info;
+
+    for (int i = 0; i < totalProcesses; i++)
     {
     	processManager.getRunningProcessesInfos(&info, processIds[i]);
-    	processManager.displayProcessInfo(&info, processIds[i]);
-    	printf("=================================\n");
+    	if (info.uid < 1000)
+    	{
+    		if (processManager.isLegitimateProcess(&info, filePath))
+    		{
+    			processManager.displayProcessInfo(&info, processIds[i]);
+    			printf("legitim\n");
+    		}
+    		else
+    		{
+                processManager.displayProcessInfo(&info, processIds[i]);
+                printf("not legitim\n");
+            }
+		}
     }
 
     return 0;
-    
+
 }

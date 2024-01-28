@@ -3,8 +3,9 @@
 **processesStrangerDanger** is a project designed to monitor and analyze running processes, identifying potential security threats by detecting strange or suspicious activities.
 Criterias for a strange process (these are some exaamples that could be updated in the future):
 
- - [ ] Unusual Usernames:
-Identify processes running under uncommon or non-system usernames. This can help catch processes initiated by unauthorized or unfamiliar users.
+ - [x] Unusual Usernames:
+Identify processes running under uncommon or non-system usernames. This can help catch processes initiated by unauthorized or unfamiliar users
+> As a critera: process with *UID > 1000* the process could be considered as a threat.
 - [ ] Unexpected Privileges:
 Monitor processes with elevated privileges that are unusual for typical user activities. Unusual sudo or root-level processes might indicate a security concern.
 - [ ] Abnormal Process Behavior:
@@ -65,6 +66,8 @@ Flag processes with uncommon or suspicious names. Malicious actors often use dis
 ## Getting Started
 
 To get started with **processesStrangerDanger**, follow these steps:
+0. Install libxml used to parse xml files
+> sudo apt install libxml2-dev
 
 1. Clone the [repository](https://github.com/Git-Yousfi-Neji//processesStrangerDanger.git)
 

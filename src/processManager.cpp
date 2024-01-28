@@ -7,8 +7,6 @@
 
 #include "../include/processManager.h"
 
-#define PARSE_PARAM(line, format, variable) (sscanf(line, format, &variable) == 1) {}
-
 CProcessManager::CProcessManager()
 {
 }
@@ -29,7 +27,7 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
     
     if (file == NULL)
     {
-        perror("Error opening file");
+        perror("Error opening file\n");
         exit(EXIT_FAILURE);
     }
 
@@ -37,17 +35,17 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
 
     while (fgets(line, MAX_LINE_SIZE, file) != NULL)
     {
-        if      PARSE_PARAM(line, "Name:\t%s", info->name)
-        else if PARSE_PARAM(line, "Umask:\t%s", info->umask)
-        else if PARSE_PARAM(line, "State:\t%c", info->state)
-        else if PARSE_PARAM(line, "Tgid:\t%d", info->tgid)
-        else if PARSE_PARAM(line, "PPid:\t%d", info->ppid)
-        else if PARSE_PARAM(line, "Pid:\t%d", info->pid)
-        else if PARSE_PARAM(line, "TracerPid:\t%d", info->tracerPid)
-        else if PARSE_PARAM(line, "Uid:\t%d", info->uid)
-        else if PARSE_PARAM(line, "Gid:\t%d", info->gid)
-        else if PARSE_PARAM(line, "FDSize:\t%d", info->fdSize)
-        else if PARSE_PARAM(line, "Threads:\t%d", info->threads)
+        if      (sscanf(line, "Name:\t%s", info->name) == 1) {}
+        else if (sscanf(line, "Umask:\t%s", info->umask) == 1) {}
+        else if (sscanf(line, "State:\t%c", &info->state) == 1) {}
+        else if (sscanf(line, "Tgid:\t%d", &info->tgid) == 1) {}
+        else if (sscanf(line, "PPid:\t%d", &info->ppid) == 1) {}
+        else if (sscanf(line, "Pid:\t%d", &info->pid) == 1) {}
+        else if (sscanf(line, "TracerPid:\t%d", &info->tracerPid) == 1) {}
+        else if (sscanf(line, "Uid:\t%d", &info->uid) == 1) {}
+        else if (sscanf(line, "Gid:\t%d", &info->gid) == 1) {}
+        else if (sscanf(line, "FDSize:\t%d", &info->fdSize) == 1) {}
+        else if (sscanf(line, "Threads:\t%d", &info->threads) == 1) {}
     }
     fclose(file);
 }
@@ -61,17 +59,19 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
  */
 void CProcessManager::displayProcessInfo(const struct SProcessInfo *info, const int processID)
 {
-	printf("Name:\t%s\n", info->name);
-	printf("Umask:\t%s\n", info->umask);
-	printf("State:\t%c\n", info->state);
-	printf("Tgid:\t%d\n", info->tgid);
-    printf("PPid:\t%d\n", info->ppid);
-    printf("Pid:\t%d\n", info->pid);
-    printf("TracerPid:\t%d\n", info->tracerPid);
-    printf("Uid:\t%d\n", info->uid);
-    printf("Gid:\t%d\n", info->gid);
-    printf("FDSize:\t%d\n", info->fdSize);
-    printf("Threads:\t%d\n", info->threads);
+    printf("===== PROC %d INFOS ===============\n", info->pid);
+	printf("| Name:\t%s\n", info->name);
+	printf("| Umask:\t%s\n", info->umask);
+	printf("| State:\t%c\n", info->state);
+	printf("| Tgid:\t%d\n", info->tgid);
+    printf("| PPid:\t%d\n", info->ppid);
+    printf("| Pid:\t%d\n", info->pid);
+    printf("| TracerPid:\t%d\n", info->tracerPid);
+    printf("| Uid:\t%d\n", info->uid);
+    printf("| Gid:\t%d\n", info->gid);
+    printf("| FDSize:\t%d\n", info->fdSize);
+    printf("| Threads:\t%d\n", info->threads);
+    printf("======================================\n");
 }
 
 /** @brief Function to count and store all processes PIDs in
@@ -88,7 +88,7 @@ int CProcessManager::countAndStoreProcesses(int* processIds)
 
     if (procDir == NULL)
     {
-        perror("Error opening /proc directory");
+        perror("Error opening /proc directory\n");
         exit(EXIT_FAILURE);
     }
 
@@ -107,7 +107,30 @@ int CProcessManager::countAndStoreProcesses(int* processIds)
             }
         }
     }
-
     closedir(procDir);
     return processCount;
+}
+
+/** @brief Function to return true if the process is in legitim list
+ *         or false if not
+ *
+ *  @param processInfo a reference on the processes informations
+ *  @param filePath file path of the legitimate list
+ *  @return bool true if legitimate false if not
+ */
+bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo, const char *filePath)
+{
+    SystemUsernamesList userList = parseSystemUsernames(filePath);
+    int numSystemUsernames = userList.count;
+    
+    for (size_t i = 0; i < numSystemUsernames; ++i)
+    {
+        if (strcmp(processInfo->name, userList.usernames[i]) == 0)
+        {
+            freeSystemUsernamesList(&userList);
+            return true;
+        }
+    }
+    freeSystemUsernamesList(&userList);
+    return false;
 }

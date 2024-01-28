@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <systemUsernames>root</systemUsernames>
+  <systemUsernames>daemon</systemUsernames>
+  <systemUsernames>sys</systemUsernames>
+  <systemUsernames>bin</systemUsernames>
+  <systemUsernames>nobody</systemUsernames>
+  <systemUsernames>init</systemUsernames>
+  <systemUsernames>nfsnobody</systemUsernames>
+  <systemUsernames>sshd</systemUsernames>
+  <systemUsernames>systemd</systemUsernames>
+  <systemUsernames>mail</systemUsernames>
+  <systemUsernames>news</systemUsernames>
+  <systemUsernames>uucp</systemUsernames>
+  <systemUsernames>www-data</systemUsernames>
+  <systemUsernames>lp</systemUsernames>
+  <systemUsernames>ftp</systemUsernames>
+  <systemUsernames>mysql</systemUsernames>
+  <systemUsernames>postgres</systemUsernames>
+</root>
