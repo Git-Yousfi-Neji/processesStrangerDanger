@@ -59,7 +59,7 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
  */
 void CProcessManager::displayProcessInfo(const struct SProcessInfo *info, const int processID)
 {
-    printf("===== PROC %d INFOS ===============\n", info->pid);
+    printf("=========== PROC %d INFOS =========\n", info->pid);
 	printf("| Name:\t%s\n", info->name);
 	printf("| Umask:\t%s\n", info->umask);
 	printf("| State:\t%c\n", info->state);
@@ -71,7 +71,8 @@ void CProcessManager::displayProcessInfo(const struct SProcessInfo *info, const 
     printf("| Gid:\t%d\n", info->gid);
     printf("| FDSize:\t%d\n", info->fdSize);
     printf("| Threads:\t%d\n", info->threads);
-    printf("======================================\n");
+    printf("| CPU usage:\t%lf\n", info->cpuUsage);
+    printf("========================================\n");
 }
 
 /** @brief Function to count and store all processes PIDs in
@@ -134,3 +135,29 @@ bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo
     freeSystemUsernamesList(&userList);
     return false;
 }
+
+void CProcessManager::cpuUsage(int pid, struct SProcessInfo *processInfo)
+{
+    char command[MAX_CMD_SIZE];
+    snprintf(command, sizeof(command), "/bin/bash %s %d",CPU_USAGE_SCRIPT, pid);
+
+    FILE *pipe = popen(command, "r");
+    if (pipe == NULL)
+    {
+        perror("popen");
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[MAX_BUFFER_SIZE];
+    while (fgets(buffer, MAX_BUFFER_SIZE, pipe) != NULL)
+    {
+        sscanf(buffer, "Used %lf%% of CPU", &(processInfo->cpuUsage));
+    }
+
+    if (pclose(pipe) == -1)
+    {
+        perror("pclose");
+        exit(EXIT_FAILURE);
+    }
+}
+

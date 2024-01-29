@@ -11,11 +11,13 @@
 #define MAX_USER_SIZE             50
 #define MAX_PROCESS_NAME          50
 #define MAX_PROCESSES_COUNT       10
-#define MAX_CMD_SIZE              100
+#define MAX_BUFFER_SIZE           256
+#define MAX_CMD_SIZE              1024
 #define MAX_LINE_SIZE             1024
 #define MAX_PROCESSES             1000
 #define MAX_SYSTEM_USERNAMES_NUM  17  
 #define PROC_DIR                  "/proc"
+#define CPU_USAGE_SCRIPT          "scripts/total_cpu_usage.sh"
 
 struct SProcessInfo {
     char name[MAX_USER_SIZE];
@@ -29,6 +31,7 @@ struct SProcessInfo {
     int gid;
     int fdSize;
     int threads;
+    double cpuUsage = 0;
     // extensible for other informations
 };
 
@@ -40,6 +43,7 @@ class CProcessManager
 		void displayProcessInfo(const struct SProcessInfo *info, const int processID);
 		int  countAndStoreProcesses(int* processIds);
         bool isLegitimateProcess(const struct SProcessInfo* processInfo, const char *filePath);
+        void cpuUsage(int pid, struct SProcessInfo *processInfo);
 };
 
 #endif // PROCESS_MANAGER_H

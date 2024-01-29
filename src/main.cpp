@@ -16,17 +16,20 @@ int main()
     for (int i = 0; i < totalProcesses; i++)
     {
     	processManager.getRunningProcessesInfos(&info, processIds[i]);
-    	if (info.uid < 1000)
+
+    	if (info.uid >= 1000)
     	{
     		if (processManager.isLegitimateProcess(&info, filePath))
     		{
+                processManager.cpuUsage(processIds[i], &info);
     			processManager.displayProcessInfo(&info, processIds[i]);
-    			printf("legitim\n");
+    			printf("Legitimate\n");
     		}
     		else
     		{
+                processManager.cpuUsage(processIds[i], &info);
                 processManager.displayProcessInfo(&info, processIds[i]);
-                printf("not legitim\n");
+                printf("Not Legitimate\n");
             }
 		}
     }
