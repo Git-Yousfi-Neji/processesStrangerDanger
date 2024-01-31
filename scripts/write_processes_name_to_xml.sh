@@ -30,8 +30,7 @@ for proc_dir in /proc/*/; do
     proc_id=$(basename "$proc_dir")
     
     if [[ -d "$proc_dir" && "$proc_id" =~ ^[0-9]+$ ]]; then
-        process_name=$(awk -v RS= -F: '$1=="Name" {sub(/^[ \t]+/, "", $2); sub(/[ \t]+$/, "", $2); print $2}' "$proc_dir/status")
-        
+        process_name=$(ps -o comm= -p $proc_id)
         if ! username_exists "$process_name" "$xml_file"; then
             echo "Found process Id = $proc_dir process Name=$process_name"
             add_username_to_xml "$process_name" "$xml_file"
