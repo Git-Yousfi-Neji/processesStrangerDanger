@@ -592,4 +592,16 @@
 <systemUsernames>zygiskd64</systemUsernames>
 <systemUsernames>ocess.gservices</systemUsernames>
 <systemUsernames>kworker/1:2</systemUsernames>
+<systemUsernames>kworker/u17:2</systemUsernames>
+<systemUsernames>kworker/2:1</systemUsernames>
+<systemUsernames>externalstorage</systemUsernames>
+<systemUsernames>e.process.gapps</systemUsernames>
+<systemUsernames>ding:background</systemUsernames>
+<systemUsernames>kworker/u16:0</systemUsernames>
+<systemUsernames>kworker/3:0</systemUsernames>
+<systemUsernames>kworker/u16:1</systemUsernames>
+<systemUsernames>kworker/u16:8</systemUsernames>
+<systemUsernames>stander.android</systemUsernames>
+<systemUsernames>er.android:mqtt</systemUsernames>
+<systemUsernames>system:ui</systemUsernames>
 </root>

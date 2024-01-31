@@ -57,7 +57,7 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
  *  @param processID the PID of the process
  *  @return Void
  */
-void CProcessManager::displayProcessInfo(const struct SProcessInfo *info, const int processID)
+void CProcessManager::displayProcessInfo(const struct SProcessInfo *info)
 {
     printf("=========== PROC %d INFOS =========\n", info->pid);
 	printf("| Name:\t%s\n", info->name);
@@ -124,7 +124,7 @@ bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo
     SystemUsernamesList userList = parseSystemUsernames(filePath);
     int numSystemUsernames = userList.count;
     
-    for (size_t i = 0; i < numSystemUsernames; ++i)
+    for (int i = 0; i < numSystemUsernames; ++i)
     {
         if (strcmp(processInfo->name, userList.usernames[i]) == 0)
         {

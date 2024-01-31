@@ -1,9 +1,7 @@
 
-#include <iostream>
-
 #include "../include/processManager.h"
 #include "../include/xml_parser.h"
-const char *filePath = "data/configs.xml";
+const char *filePath = "data/systemUsernames.xml";
 
 int main()
 {
@@ -22,13 +20,13 @@ int main()
     		if (processManager.isLegitimateProcess(&info, filePath))
     		{
                 processManager.cpuUsage(processIds[i], &info);
-    			processManager.displayProcessInfo(&info, processIds[i]);
+    			processManager.displayProcessInfo(&info);
     			printf("Legitimate\n");
     		}
     		else
     		{
                 processManager.cpuUsage(processIds[i], &info);
-                processManager.displayProcessInfo(&info, processIds[i]);
+                processManager.displayProcessInfo(&info);
                 printf("Not Legitimate\n");
             }
 		}
