@@ -44,32 +44,57 @@ Flag processes with uncommon or suspicious names. Malicious actors often use dis
 
 ## Project Structure
 ```
-/processesStrangerDanger
+|processesStrangerDanger
 ├── bin
+│   └── processesStrangerDanger
 ├── config
 ├── data
-│ └── log
+│   ├── log
+│   ├── systemUsernames.db
+│   └── systemUsernames.xml
 ├── include
-│ ├── networkAnalyzer.h
-│ ├── processManager.h
-│ └── userAnalyzer.h
+│   ├── networkAnalyzer.h
+│   ├── processManager.h
+│   ├── userAnalyzer.h
+│   └── xml_parser.h
 ├── lib
+├── LICENSE
 ├── Makefile
-├── LICENCE
+├── obj
+│   ├── main.d
+│   ├── main.o
+│   ├── networkAnalyzer.d
+│   ├── networkAnalyzer.o
+│   ├── processManager.d
+│   ├── processManager.o
+│   ├── userAnalyzer.d
+│   ├── userAnalyzer.o
+│   ├── xml_parser.d
+│   └── xml_parser.o
+├── python_scripts
+│   └── add_process_names_to_db.py
 ├── README.md
+├── scripts
+│   ├── stress_cpu.sh
+│   ├── total_cpu_usage.sh
+│   └── write_processes_name_to_xml.sh
 └── src
-├── main.cpp
-├── networkAnalyzer.cpp
-├── processManager.cpp
-└── userAnalyzer.cpp
+    ├── main.cpp
+    ├── networkAnalyzer.cpp
+    ├── processManager.cpp
+    ├── userAnalyzer.cpp
+    └── xml_parser.c
 ```
 ## Getting Started
 
 To get started with **processesStrangerDanger**, follow these steps:
 0. Install libxml used to parse xml files
-> sudo apt install libxml2-dev
+> sudo apt-get install libxml2-dev
+> sudo apt-get install inotify-tools
+> sudo apt-get install stress
+> pip install xmltodict 
 
-1. Clone the [repository](https://github.com/Git-Yousfi-Neji//processesStrangerDanger.git)
+1. Clone the repository:
 
 > git clone https://github.com/Git-Yousfi-Neji//processesStrangerDanger.git
 
@@ -86,7 +111,7 @@ Run the executable to start monitoring processes and analyzing potential securit
 > ./bin/processesStrangerDanger
 
 ## Configuration
-Adjust the project's configuration in the config directory, especially config.ini, to suit your needs.
+Adjust the project's configuration in the config directory, to suit your needs.
 
 ## Contributing
 Feel free to contribute to this project. Fork the repository, make your changes, and submit a pull request.
