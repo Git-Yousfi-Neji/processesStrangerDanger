@@ -20,8 +20,8 @@ CProcessManager::CProcessManager()
  */
 void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int processID)
 {
-    char path[MAX_CMD_SIZE];
-    snprintf(path, MAX_CMD_SIZE, "/proc/%d/status", processID);
+    char path[PROCESS_MANAGER_MAX_CMD_SIZE];
+    snprintf(path, PROCESS_MANAGER_MAX_CMD_SIZE, "/proc/%d/status", processID);
     
     FILE *file = fopen(path, "r");
     
@@ -31,9 +31,9 @@ void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int pr
         exit(EXIT_FAILURE);
     }
 
-    char line[MAX_LINE_SIZE];
+    char line[PROCESS_MANAGER_MAX_LINE_SIZE];
 
-    while (fgets(line, MAX_LINE_SIZE, file) != NULL)
+    while (fgets(line, PROCESS_MANAGER_MAX_LINE_SIZE, file) != NULL)
     {
         if      (sscanf(line, "Name:\t%s", info->name) == 1) {}
         else if (sscanf(line, "Umask:\t%s", info->umask) == 1) {}
@@ -83,7 +83,7 @@ void CProcessManager::displayProcessInfo(const struct SProcessInfo *info)
  */
 int CProcessManager::countAndStoreProcesses(int* processIds)
 {
-    DIR *procDir = opendir(PROC_DIR);
+    DIR *procDir = opendir(PROCESS_MANAGER_PROC_DIR);
     struct dirent *entry;
     int processCount = 0;
 
@@ -101,9 +101,9 @@ int CProcessManager::countAndStoreProcesses(int* processIds)
             processIds[processCount] = pid;
             processCount++;
             
-            if (processCount >= MAX_PROCESSES)
+            if (processCount >= PROCESS_MANAGER_MAX_PROCESSES)
             {
-                fprintf(stderr, "Too many processes to handle. Increase MAX_PROCESSES.\n");
+                fprintf(stderr, "Too many processes to handle. Increase PROCESS_MANAGER_MAX_PROCESSES.\n");
                 exit(EXIT_FAILURE);
             }
         }
@@ -138,8 +138,8 @@ bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo
 
 void CProcessManager::cpuUsage(int pid, struct SProcessInfo *processInfo)
 {
-    char command[MAX_CMD_SIZE];
-    snprintf(command, sizeof(command), "/bin/bash %s %d",CPU_USAGE_SCRIPT, pid);
+    char command[PROCESS_MANAGER_MAX_CMD_SIZE];
+    snprintf(command, sizeof(command), "/bin/bash %s %d",PROCESS_MANAGER_CPU_USAGE_SCRIPT, pid);
 
     FILE *pipe = popen(command, "r");
     if (pipe == NULL)
@@ -148,8 +148,8 @@ void CProcessManager::cpuUsage(int pid, struct SProcessInfo *processInfo)
         exit(EXIT_FAILURE);
     }
 
-    char buffer[MAX_BUFFER_SIZE];
-    while (fgets(buffer, MAX_BUFFER_SIZE, pipe) != NULL)
+    char buffer[PROCESS_MANAGER_MAX_BUFFER_SIZE];
+    while (fgets(buffer, PROCESS_MANAGER_MAX_BUFFER_SIZE, pipe) != NULL)
     {
         sscanf(buffer, "Used %lf%% of CPU", &(processInfo->cpuUsage));
     }

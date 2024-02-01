@@ -7,21 +7,22 @@
 #include "xml_parser.h"
 
 
-#define MAX_UMASK_SIZE            5
-#define MAX_USER_SIZE             50
-#define MAX_PROCESS_NAME          50
-#define MAX_PROCESSES_COUNT       10
-#define MAX_BUFFER_SIZE           256
-#define MAX_CMD_SIZE              1024
-#define MAX_LINE_SIZE             1024
-#define MAX_PROCESSES             1000
-#define MAX_SYSTEM_USERNAMES_NUM  17  
-#define PROC_DIR                  "/proc"
-#define CPU_USAGE_SCRIPT          "scripts/total_cpu_usage.sh"
+#define PROCESS_MANAGER_MAX_UMASK_SIZE            5
+#define PROCESS_MANAGER_MAX_USER_SIZE             50
+#define PROCESS_MANAGER_MAX_PROCESS_NAME          50
+#define PROCESS_MANAGER_MAX_PROCESSES_COUNT       10
+#define PROCESS_MANAGER_MAX_BUFFER_SIZE           256
+#define PROCESS_MANAGER_MAX_CMD_SIZE              1024
+#define PROCESS_MANAGER_MAX_LINE_SIZE             1024
+#define PROCESS_MANAGER_MAX_PROCESSES             1000
+#define PROCESS_MANAGER_UID_THRESHOLD             1000
+#define PROCESS_MANAGER_MAX_SYSTEM_USERNAMES_NUM  17  
+#define PROCESS_MANAGER_PROC_DIR                  "/proc"
+#define PROCESS_MANAGER_CPU_USAGE_SCRIPT          "scripts/total_cpu_usage.sh"
 
 struct SProcessInfo {
-    char name[MAX_USER_SIZE];
-    char umask[MAX_UMASK_SIZE ];
+    char name[PROCESS_MANAGER_MAX_USER_SIZE];
+    char umask[PROCESS_MANAGER_MAX_UMASK_SIZE ];
     char state;
     int tgid;
     int ppid;

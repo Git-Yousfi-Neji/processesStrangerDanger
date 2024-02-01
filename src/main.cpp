@@ -7,7 +7,7 @@ int main()
 {
     CProcessManager processManager;
 
-    int processIds[MAX_PROCESSES];
+    int processIds[PROCESS_MANAGER_MAX_PROCESSES];
     int totalProcesses = processManager.countAndStoreProcesses(processIds);
     struct SProcessInfo info;
 
@@ -15,7 +15,7 @@ int main()
     {
     	processManager.getRunningProcessesInfos(&info, processIds[i]);
 
-    	if (info.uid >= 1000)
+    	if (info.uid >= PROCESS_MANAGER_UID_THRESHOLD)
     	{
     		if (processManager.isLegitimateProcess(&info, filePath))
     		{
