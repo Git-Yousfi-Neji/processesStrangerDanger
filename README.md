@@ -1,8 +1,8 @@
 # processesStrangerDanger
 
-**processesStrangerDanger** is a project designed to monitor and analyze running processes, identifying potential security threats by detecting strange or suspicious activities.
-Criterias for a strange process (these are some exaamples that could be updated in the future):
-
+**ProcessesStrangerDanger**
+is a project meticulously crafted for the vigilant monitoring and analysis of active processes, aiming to discern potential security threats by detecting unusual or suspicious activities.
+The criteria defining what constitutes an abnormal process—these examples may evolve over time—include:"
 - [x] Uncommon Process Names:
 Flag processes with uncommon or suspicious names. Malicious actors often use disguised names to hide their activities.
 > As a critera: process name not in the list considered as a threat.
