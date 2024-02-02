@@ -181,9 +181,7 @@ bool CProcessManager::isHighCPUUsage(const struct SProcessInfo* processInfo)
  */
 bool CProcessManager::isUnexpectedPPID(int ppid, const int* expectedPPIDs)
 {
-	int numExpectedPPIDs = sizeof(expectedPPIDs)/sizeof(expectedPPIDs[0]);
-	
-    for (int i = 0; i < numExpectedPPIDs; ++i)
+    for (int i = 0; i < PROCESS_MANAGER_LEGITIMATE_PPIDS_NUM; ++i)
     {
         if (ppid == expectedPPIDs[i])
         {

@@ -7,7 +7,7 @@ const char *filePath = "data/systemUsernames.xml";
 int main()
 {
     CProcessManager processManager;
-    int expectedPPIDs[18] = {PROCESS_MANAGER_EXPECTED_PPIDS};
+    int expectedPPIDs[PROCESS_MANAGER_LEGITIMATE_PPIDS_NUM] = {PROCESS_MANAGER_LEGITIMATE_PPIDS};
 
     int processIds[PROCESS_MANAGER_MAX_PROCESSES];
     int totalProcesses = processManager.countAndStoreProcesses(processIds);
