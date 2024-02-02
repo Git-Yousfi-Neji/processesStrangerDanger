@@ -18,7 +18,7 @@ CProcessManager::CProcessManager()
  *  @param processID the PID of the process
  *  @return Void
  */
-void CProcessManager::getRunningProcessesInfos(struct SProcessInfo *info, int processID)
+void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int processID)
 {
     char path[PROCESS_MANAGER_MAX_CMD_SIZE];
     snprintf(path, PROCESS_MANAGER_MAX_CMD_SIZE, "/proc/%d/status", processID);
@@ -119,7 +119,7 @@ int CProcessManager::countAndStoreProcesses(int* processIds)
  *  @param filePath file path of the legitimate list
  *  @return bool true if legitimate false if not
  */
-bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo, const char *filePath)
+bool CProcessManager::isLegitimateProcessName(const struct SProcessInfo* processInfo, const char *filePath)
 {
     SystemUsernamesList userList = parseSystemUsernames(filePath);
     int numSystemUsernames = userList.count;
@@ -136,7 +136,7 @@ bool CProcessManager::isLegitimateProcess(const struct SProcessInfo* processInfo
     return false;
 }
 
-void CProcessManager::cpuUsage(int pid, struct SProcessInfo *processInfo)
+void CProcessManager::fillCPUUsage(int pid, struct SProcessInfo *processInfo)
 {
     char command[PROCESS_MANAGER_MAX_CMD_SIZE];
     snprintf(command, sizeof(command), "/bin/bash %s %d",PROCESS_MANAGER_CPU_USAGE_SCRIPT, pid);
@@ -159,5 +159,48 @@ void CProcessManager::cpuUsage(int pid, struct SProcessInfo *processInfo)
         perror("pclose");
         exit(EXIT_FAILURE);
     }
+}
+
+/** @brief Function to return true if the process has high CPU usage
+ *         or false if not
+ *
+ *  @param processInfo a reference on the processes informations
+ *  @return bool true if high CPU usage false if not
+ */
+bool CProcessManager::isHighCPUUsage(const struct SProcessInfo* processInfo)
+{
+    return processInfo->cpuUsage > PROCESS_MANAGER_CPU_USAGE_THRESHOLD;
+}
+
+/** @brief Function to return true if the process has an unexpected PPID
+ *         or false if not
+ *
+ *  @param ppid the PPID to check
+ *  @param expectedPPIDs an array of expected PPIDs
+ *  @return bool true if unexpected PPID false if not
+ */
+bool CProcessManager::isUnexpectedPPID(int ppid, const int* expectedPPIDs)
+{
+	int numExpectedPPIDs = sizeof(expectedPPIDs)/sizeof(expectedPPIDs[0]);
+	
+    for (int i = 0; i < numExpectedPPIDs; ++i)
+    {
+        if (ppid == expectedPPIDs[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+/** @brief Function to return true if the process has an abnormal number of threads
+ *         or false if not
+ *
+ *  @param numThreads the number of threads to check
+ *  @return bool true if abnormal number of threads false if not
+ */
+bool CProcessManager::isAbnormalNumThreads(int numThreads)
+{
+    return (numThreads > PROCESS_MANAGER_MAX_EXPECTED_THREADS || numThreads < PROCESS_MANAGER_MIN_EXPECTED_THREADS);
 }
 

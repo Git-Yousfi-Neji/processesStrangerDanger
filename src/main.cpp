@@ -3,9 +3,11 @@
 #include "../include/xml_parser.h"
 const char *filePath = "data/systemUsernames.xml";
 
+
 int main()
 {
     CProcessManager processManager;
+    int expectedPPIDs[18] = {PROCESS_MANAGER_EXPECTED_PPIDS};
 
     int processIds[PROCESS_MANAGER_MAX_PROCESSES];
     int totalProcesses = processManager.countAndStoreProcesses(processIds);
@@ -13,22 +15,21 @@ int main()
 
     for (int i = 0; i < totalProcesses; i++)
     {
-    	processManager.getRunningProcessesInfos(&info, processIds[i]);
+    	processManager.fillRunningProcessesInfos(&info, processIds[i]);
+    	processManager.fillCPUUsage(processIds[i], &info);
 
-    	if (info.uid >= PROCESS_MANAGER_UID_THRESHOLD)
+    	if ( !processManager.isLegitimateProcessName(&info, filePath) ||
+    	      processManager.isUnexpectedPPID(info.ppid, expectedPPIDs) ||
+     	     processManager.isHighCPUUsage(&info) ||
+     	     processManager.isAbnormalNumThreads(info.threads) )
     	{
-    		if (processManager.isLegitimateProcess(&info, filePath))
-    		{
-                processManager.cpuUsage(processIds[i], &info);
-    			processManager.displayProcessInfo(&info);
-    			printf("Legitimate\n");
-    		}
-    		else
-    		{
-                processManager.cpuUsage(processIds[i], &info);
-                processManager.displayProcessInfo(&info);
-                printf("Not Legitimate\n");
-            }
+    		processManager.displayProcessInfo(&info);
+    		printf ("Not Legitimate process\n");
+		}
+		else
+		{
+    		processManager.displayProcessInfo(&info);
+    		printf ("Legitimate process\n");
 		}
     }
 

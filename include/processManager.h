@@ -28,11 +28,14 @@ class CProcessManager
 {
 	public:
 		CProcessManager();
-		void getRunningProcessesInfos(struct SProcessInfo *info, int processID);
+		void fillRunningProcessesInfos(struct SProcessInfo *info, int processID);
 		void displayProcessInfo(const struct SProcessInfo *info);
-		int  countAndStoreProcesses(int* processIds);
-        bool isLegitimateProcess(const struct SProcessInfo* processInfo, const char *filePath);
-        void cpuUsage(int pid, struct SProcessInfo *processInfo);
+		int  countAndStoreProcesses(int *processIds);
+        bool isLegitimateProcessName(const struct SProcessInfo *processInfo, const char *filePath);
+        void fillCPUUsage(int pid, struct SProcessInfo *processInfo);
+        bool isHighCPUUsage(const struct SProcessInfo *processInfo);
+        bool isUnexpectedPPID(int ppid, const int* expectedPPIDs);
+        bool isAbnormalNumThreads(int numThreads);
 };
 
 #endif // PROCESS_MANAGER_H
