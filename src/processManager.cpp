@@ -59,7 +59,7 @@ void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int p
  */
 void CProcessManager::displayProcessInfo(const struct SProcessInfo *info)
 {
-    printf("=========== PROC %d INFOS =========\n", info->pid);
+    printf("========== PROCESS INFO =========\n");
 	printf("| Name:\t%s\n", info->name);
 	printf("| Umask:\t%s\n", info->umask);
 	printf("| State:\t%c\n", info->state);
@@ -72,7 +72,7 @@ void CProcessManager::displayProcessInfo(const struct SProcessInfo *info)
     printf("| FDSize:\t%d\n", info->fdSize);
     printf("| Threads:\t%d\n", info->threads);
     printf("| CPU usage:\t%lf\n", info->cpuUsage);
-    printf("========================================\n");
+    printf("==================================\n");
 }
 
 /** @brief Function to count and store all processes PIDs in

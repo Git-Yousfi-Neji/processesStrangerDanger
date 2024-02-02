@@ -96,7 +96,8 @@ To get started with **processesStrangerDanger**, follow these steps:
 > sudo apt-get install libxml2-dev
 > sudo apt-get install inotify-tools
 > sudo apt-get install stress
-> pip install xmltodict 
+> pip install xmltodict
+> pip install tabulate
 
 1. Clone the repository:
 
