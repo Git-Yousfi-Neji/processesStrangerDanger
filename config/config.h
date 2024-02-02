@@ -1,0 +1,17 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define PROCESS_MANAGER_MAX_UMASK_SIZE            5
+#define PROCESS_MANAGER_MAX_USER_SIZE             50
+#define PROCESS_MANAGER_MAX_PROCESS_NAME          50
+#define PROCESS_MANAGER_MAX_PROCESSES_COUNT       10
+#define PROCESS_MANAGER_MAX_BUFFER_SIZE           256
+#define PROCESS_MANAGER_MAX_CMD_SIZE              1024
+#define PROCESS_MANAGER_MAX_LINE_SIZE             1024
+#define PROCESS_MANAGER_MAX_PROCESSES             1000
+#define PROCESS_MANAGER_UID_THRESHOLD             1000
+#define PROCESS_MANAGER_MAX_SYSTEM_USERNAMES_NUM  17  
+#define PROCESS_MANAGER_PROC_DIR                  "/proc"
+#define PROCESS_MANAGER_CPU_USAGE_SCRIPT          "scripts/total_cpu_usage.sh"
+
+#endif // CONFIG_H
