@@ -57,22 +57,22 @@ void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int p
  *  @param processID the PID of the process
  *  @return Void
  */
-void CProcessManager::displayProcessInfo(const struct SProcessInfo *info)
+void CProcessManager::displayProcessInfo(const SProcessInfo* info)
 {
-    printf("========== PROCESS INFO =========\n");
-	printf("| Name:\t%s\n", info->name);
-	printf("| Umask:\t%s\n", info->umask);
-	printf("| State:\t%c\n", info->state);
-	printf("| Tgid:\t%d\n", info->tgid);
-    printf("| PPid:\t%d\n", info->ppid);
-    printf("| Pid:\t%d\n", info->pid);
-    printf("| TracerPid:\t%d\n", info->tracerPid);
-    printf("| Uid:\t%d\n", info->uid);
-    printf("| Gid:\t%d\n", info->gid);
-    printf("| FDSize:\t%d\n", info->fdSize);
-    printf("| Threads:\t%d\n", info->threads);
-    printf("| CPU usage:\t%lf\n", info->cpuUsage);
-    printf("==================================\n");
+    std::cout << "========== PROCESS INFO =========" << std::endl;
+    std::cout << "| Name:\t\t\t" << info->name << std::endl;
+    std::cout << "| Umask:\t\t" << info->umask << std::endl;
+    std::cout << "| State:\t\t" << info->state << std::endl;
+    std::cout << "| Tgid:\t\t\t" << info->tgid << std::endl;
+    std::cout << "| PPid:\t\t\t" << info->ppid << std::endl;
+    std::cout << "| Pid:\t\t\t" << info->pid << std::endl;
+    std::cout << "| TracerPid:\t\t" << info->tracerPid << std::endl;
+    std::cout << "| Uid:\t\t\t" << info->uid << std::endl;
+    std::cout << "| Gid:\t\t\t" << info->gid << std::endl;
+    std::cout << "| FDSize:\t\t" << info->fdSize << std::endl;
+    std::cout << "| Threads:\t\t" << info->threads << std::endl;
+    std::cout << "| CPU usage:\t\t" << info->cpuUsage << std::endl;
+    std::cout << "==================================" << std::endl;
 }
 
 /** @brief Function to count and store all processes PIDs in

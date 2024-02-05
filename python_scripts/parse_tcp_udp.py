@@ -88,5 +88,7 @@ for fn in fns:
                     row = row[:len(headers)]
 
             output.append(row)
-
-print(tabulate.tabulate(output, headers))
+if not output:  # Check if output is empty
+    print("Nan")
+else:
+	print(tabulate.tabulate(output, headers))

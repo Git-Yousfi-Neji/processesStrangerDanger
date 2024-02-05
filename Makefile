@@ -1,6 +1,7 @@
 CXX := g++
-CXXFLAGS := -lstdc++
+CXXFLAGS := -Wall -Wextra -std=c++17 -O2
 INCLUDES := -I/include/ -I/usr/include/libxml2/ -I/config/
+
 SRCS := $(wildcard src/*.cpp)
 OBJS := $(patsubst src/%.cpp, obj/%.o, $(SRCS))
 TARGET := bin/processesStrangerDanger

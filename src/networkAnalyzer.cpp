@@ -6,245 +6,201 @@
 
 CNetworkAnalyzer::CNetworkAnalyzer()
 {
+	
 }
 
-STcpInfo CNetworkAnalyzer::fillTcpInfo(const int pid)
+STcpInfo CNetworkAnalyzer::fillTcpInfo(const int pid) const
 {
-    STcpInfo tcpInfo;
+    return fillInfo<struct STcpInfo>(pid, "tcp");
+}
 
-    // Run the Python script to get TCP information
-    std::string command = "python3 python_scripts/parse_tcp_udp.py --tcp --pid " + std::to_string(pid);
+
+SUdpInfo CNetworkAnalyzer::fillUdpInfo(const int pid) const
+{
+    return fillInfo<struct SUdpInfo>(pid, "udp");
+}
+
+template <typename T>
+T CNetworkAnalyzer::fillInfo(const int pid, const std::string& protocol) const
+{
+    std::string command = "./scripts/printStructs.sh " + std::to_string(pid) + " " + protocol;
     FILE* pipe = popen(command.c_str(), "r");
     if (!pipe)
     {
         std::cerr << "Error executing command." << std::endl;
-        return tcpInfo;
+        exit(EXIT_FAILURE);
     }
 
-    // Read the output of the Python script
-    char buffer[128];
     std::stringstream output;
-    while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
+    char buffer[1024];
+    while (fgets(buffer, sizeof(buffer), pipe) != NULL)
     {
         output << buffer;
     }
 
-    // Close the pipe
     pclose(pipe);
 
-    // Parse the output and fill the STcpInfo struct
-    std::istringstream outputStream(output.str());
+    T info;
     std::string line;
-    std::getline(outputStream, line); // Skip the header line
-
-    // Assuming only one line of TCP information is relevant
-    std::getline(outputStream, line);
-
-    std::istringstream lineStream(line);
-    lineStream >> tcpInfo.sl >> tcpInfo.localAddress >> tcpInfo.rem_address >> tcpInfo.st >> tcpInfo.tx_queue
-               >> tcpInfo.rx_queue >> tcpInfo.tr >> tcpInfo.tm_when >> tcpInfo.retrnsmt >> tcpInfo.uid
-               >> tcpInfo.timeout >> tcpInfo.inode >> tcpInfo.ref >> tcpInfo.pointer >> tcpInfo.drops;
-
-    // Extract local port from local_address
-    std::size_t found = tcpInfo.localAddress.find(':');
-    if (found != std::string::npos)
-    {
-        tcpInfo.localPort = tcpInfo.localAddress.substr(found + 1);
-    }
-
-    // Extract remote port from rem_address
-    found = tcpInfo.rem_address.find(':');
-    if (found != std::string::npos)
-    {
-        tcpInfo.remotePort = tcpInfo.rem_address.substr(found + 1);
-    }
-
-    // Convert port numbers from hexadecimal to decimal
-try {
-    std::size_t localPortPos, remotePortPos;
-    unsigned long localPort = std::stoul(tcpInfo.localPort, &localPortPos, 16);
-    unsigned long remotePort = std::stoul(tcpInfo.remotePort, &remotePortPos, 16);
-
-    if (localPortPos == tcpInfo.localPort.length() && remotePortPos == tcpInfo.remotePort.length())
-    {
-        // Conversion successful
-        tcpInfo.localPort = std::to_string(localPort);
-        tcpInfo.remotePort = std::to_string(remotePort);
-    } else
-    {
-        // Handle conversion failure
-        std::cerr << "Error converting port numbers from hexadecimal to decimal." << std::endl;
-    }
-} catch (const std::invalid_argument& e)
-{
-    // Handle invalid argument exception
-    std::cerr << "Error converting port numbers: " << e.what() << std::endl;
-} catch (const std::out_of_range& e)
-{
-    // Handle out-of-range exception
-    std::cerr << "Error converting port numbers: " << e.what() << std::endl;
-}
-
-
-    return tcpInfo;
-}
-
-SUdpInfo CNetworkAnalyzer::fillUdpInfo(const int pid)
-{
-    SUdpInfo udpInfo;
-
-    // Run the Python script to get UDP information
-    std::string command = "python3 python_scripts/parse_tcp_udp.py --udp --pid " + std::to_string(pid);
-    FILE* pipe = popen(command.c_str(), "r");
-    if (!pipe)
-    {
-        std::cerr << "Error executing command." << std::endl;
-        return udpInfo;
-    }
-
-    // Read the output of the Python script
-    char buffer[128];
-    std::stringstream output;
-    while (fgets(buffer, sizeof(buffer), pipe) != nullptr)
-    {
-        output << buffer;
-    }
-
-    // Close the pipe
-    pclose(pipe);
-
-    // Parse the output and fill the SUdpInfo struct
-    std::istringstream outputStream(output.str());
-    std::string line;
-    std::getline(outputStream, line); // Skip the header line
-
-    // Assuming only one line of UDP information is relevant
-    std::getline(outputStream, line);
-
-    std::istringstream lineStream(line);
-    lineStream >> udpInfo.sl >> udpInfo.localAddress >> udpInfo.rem_address >> udpInfo.st >> udpInfo.tx_queue
-               >> udpInfo.rx_queue >> udpInfo.tr >> udpInfo.tm_when >> udpInfo.retrnsmt >> udpInfo.uid
-               >> udpInfo.timeout >> udpInfo.inode >> udpInfo.ref >> udpInfo.pointer >> udpInfo.drops;
-
-    // Extract local port from local_address
-    std::size_t found = udpInfo.localAddress.find(':');
-    if (found != std::string::npos)
-    {
-        udpInfo.localPort = udpInfo.localAddress.substr(found + 1);
-    }
-
-    // Extract remote port from rem_address
-    found = udpInfo.rem_address.find(':');
-    if (found != std::string::npos)
-    {
-        udpInfo.remotePort = udpInfo.rem_address.substr(found + 1);
-    }
-
-    // Convert port numbers from hexadecimal to decimal
-try {
-    std::size_t localPortPos, remotePortPos;
-    unsigned long localPort = std::stoul(udpInfo.localPort, &localPortPos, 16);
-    unsigned long remotePort = std::stoul(udpInfo.remotePort, &remotePortPos, 16);
-
-    if (localPortPos == udpInfo.localPort.length() && remotePortPos == udpInfo.remotePort.length())
-    {
-        // Conversion successful
-        udpInfo.localPort = std::to_string(localPort);
-        udpInfo.remotePort = std::to_string(remotePort);
-    }
-    else
-    {
-        // Handle conversion failure
-        std::cerr << "Error converting port numbers from hexadecimal to decimal." << std::endl;
-    }
-} catch (const std::invalid_argument& e) {
-    // Handle invalid argument exception
-    std::cerr << "Error converting port numbers: " << e.what() << std::endl;
-} catch (const std::out_of_range& e) {
-    // Handle out-of-range exception
-    std::cerr << "Error converting port numbers: " << e.what() << std::endl;
-}
-
-
-    return udpInfo;
-}
-// Function to fill Unix information
-SUnixInfo CNetworkAnalyzer::fillUnixInfo(const int pid)
-{
-    SUnixInfo unixInfo;
-
-    std::string filePath = "/proc/" + std::to_string(pid) + "/net/unix";
-
-    std::ifstream file(filePath);
-    if (!file.is_open())
-    {
-        std::cerr << "Error opening file: " << filePath << std::endl;
-        return unixInfo;  // Return an empty SUnixInfo on error
-    }
-
-    // Skip the header line
-    std::string header;
-    std::getline(file, header);
-
-    // Parse the content
-    std::string line;
-    while (std::getline(file, line))
+    while (std::getline(output, line))
     {
         std::istringstream iss(line);
-        std::string num, refCount, protocol, flags, type, st, inode, path;
+        std::string key, value;
 
-        iss >> num >> refCount >> protocol >> flags >> type >> st >> inode >> path;
-
-        if (!path.empty())
+        if (iss >> key >> value)
         {
-            unixInfo.socketType = type;
-            unixInfo.socketPath = path;
-            // Add other members as needed.
-            break;  // Assuming only one entry is needed for now
+        	value = value.c_str();
+            if (key == "sl:")
+                info.sl = std::stoi(value);
+            else if (key == "localAddress:")
+                info.localAddress = value;
+            else if (key == "rem_address:")
+                info.rem_address = value;
+            else if (key == "st:")
+                info.st = std::stoi(value);
+            else if (key == "tx_queue:")
+                info.tx_queue = std::stoi(value);
+            else if (key == "rx_queue:")
+                info.rx_queue = std::stoi(value);
+            else if (key == "tr:")
+                info.tr = std::stoi(value);
+            else if (key == "tm_when:")
+                info.tm_when = std::stoi(value);
+            else if (key == "retrnsmt:")
+                info.retrnsmt = std::stoi(value);
+            else if (key == "uid:")
+                info.uid = std::stoi(value);
+            else if (key == "timeout:")
+                info.timeout = std::stoi(value);
+            else if (key == "inode:")
+                info.inode = std::stoi(value);
+            else if (key == "ref:")
+                info.ref = std::stoi(value);
+            else if (key == "pointer:")
+                info.pointer = value;
+            else if (key == "drops:")
+                info.drops = std::stoi(value);
+            else if (key == "localPort:")
+                info.localPort = std::stoi(value);
+            else if (key == "rem_port:")
+                info.remotePort = std::stoi(value);
         }
     }
-
-    // Close the file
-    file.close();
-
-    return unixInfo;
+    return info;
 }
 
-
-// Implementation to fill the SNetworkInfo structure.
-void CNetworkAnalyzer::fillNetworkInfo(const int pid, SNetworkInfo *networkInfo)
+template <typename T>
+bool CNetworkAnalyzer::isValidInfo(const T& info) const
 {
-    networkInfo->_tcp = fillTcpInfo(pid);
-    networkInfo->_udp = fillUdpInfo(pid);
-    networkInfo->_unix = fillUnixInfo(pid);
+    // Perform basic checks
+    if (info.sl < 0 ||
+        info.localAddress == "" ||
+        info.localPort == 0 ||
+        info.remotePort == 0)
+    {
+        return false;
+    }
+    return true;
 }
 
-void CNetworkAnalyzer::displayNetworkInfos(const struct SNetworkInfo *net)
+
+
+void CNetworkAnalyzer::fillNetworkInfo(const int pid, SNetworkInfo* networkInfo)
 {
-    std::cout << "=========== NETWORK INFO =========" << std::endl;
-    
-    std::cout << "TCP:" << std::endl;
-    std::cout << "| Local Address:\t" << net->_tcp.localAddress << std::endl;
-    std::cout << "| Local Port:\t\t" << net->_tcp.localPort << std::endl;
-    std::cout << "| Remote Address:\t" << net->_tcp.rem_address << std::endl;
-    std::cout << "| Remote Port:\t\t" << net->_tcp.remotePort << std::endl;
-    std::cout << "| State:\t\t" << net->_tcp.st << std::endl;
+    STcpInfo tcpInfo = fillTcpInfo(pid);
+    SUdpInfo udpInfo = fillUdpInfo(pid);
 
-    std::cout << "UDP:" << std::endl;
-    std::cout << "| Local Address:\t" << net->_udp.localAddress << std::endl;
-    std::cout << "| Local Port:\t\t" << net->_udp.localPort << std::endl;
-
-    std::cout << "Unix:" << std::endl;
-    std::cout << "| Socket Type:\t\t" << net->_unix.socketType << std::endl;
-    std::cout << "| Socket Path:\t\t" << net->_unix.socketPath << std::endl;
-
-    std::cout << "===================================" << std::endl;
+    // Check if the obtained TCP and UDP information is valid before filling the structs
+    if (isValidInfo(tcpInfo))
+    	networkInfo->_tcp = tcpInfo;
+    if (isValidInfo(udpInfo))
+        networkInfo->_udp = udpInfo;
+    if (!isValidInfo(tcpInfo) && !isValidInfo(udpInfo))
+        std::cerr << "Error: Invalid TCP or UDP information for PID " << pid << std::endl;
 }
 
-
-bool CNetworkAnalyzer::isUnusualNetworkConnection(const struct SNetworkInfo *networkInfo)
+void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
 {
-	return false;
+    if (isValidInfo(tcpInfo))
+    {
+    	std::cout << "Processing Tcp for PID: " << pid << std::endl;
+
+        std::cout << "=========== TCP INFO =========" << std::endl;
+        std::cout << "| Socket ID:           " << tcpInfo.sl << std::endl;
+        std::cout << "| Local Address:       " << tcpInfo.localAddress << std::endl;
+        std::cout << "| Local Port:          " << tcpInfo.localPort << std::endl;
+        std::cout << "| Remote Address:      " << tcpInfo.rem_address << std::endl;
+        std::cout << "| Remote Port:         " << tcpInfo.remotePort << std::endl;
+        std::cout << "| Connection State:    " << tcpInfo.st << std::endl;
+        std::cout << "| TX Queue Size:       " << tcpInfo.tx_queue << std::endl;
+        std::cout << "| RX Queue Size:       " << tcpInfo.rx_queue << std::endl;
+        std::cout << "| Timer Active:        " << tcpInfo.tr << std::endl;
+        std::cout << "| Timer Expires:       " << tcpInfo.tm_when << std::endl;
+        std::cout << "| Retransmission Count:" << tcpInfo.retrnsmt << std::endl;
+        std::cout << "| User ID:             " << tcpInfo.uid << std::endl;
+        std::cout << "| Timeout:             " << tcpInfo.timeout << std::endl;
+        std::cout << "| Inode:               " << tcpInfo.inode << std::endl;
+        std::cout << "| Reference Count:     " << tcpInfo.ref << std::endl;
+        std::cout << "| Pointer:             " << tcpInfo.pointer << std::endl;
+        std::cout << "| Dropped Packets:     " << tcpInfo.drops << std::endl;
+        std::cout << "=============================" << std::endl;
+    }
 }
+
+void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
+{
+    if (isValidInfo(udpInfo))
+    {
+    	std::cout << "Processing Udp for PID: " << pid << std::endl;
+
+        std::cout << "=========== UDP INFO =========" << std::endl;
+        std::cout << "| Socket ID:           " << udpInfo.sl << std::endl;
+        std::cout << "| Local Address:       " << udpInfo.localAddress << std::endl;
+        std::cout << "| Local Port:          " << udpInfo.localPort << std::endl;
+        std::cout << "| Remote Address:      " << udpInfo.rem_address << std::endl;
+        std::cout << "| Remote Port:         " << udpInfo.remotePort << std::endl;
+        std::cout << "| Connection State:    " << udpInfo.st << std::endl;
+        std::cout << "| TX Queue Size:       " << udpInfo.tx_queue << std::endl;
+        std::cout << "| RX Queue Size:       " << udpInfo.rx_queue << std::endl;
+        std::cout << "| Timer Active:        " << udpInfo.tr << std::endl;
+        std::cout << "| Timer Expires:       " << udpInfo.tm_when << std::endl;
+        std::cout << "| Retransmission Count:" << udpInfo.retrnsmt << std::endl;
+        std::cout << "| User ID:             " << udpInfo.uid << std::endl;
+        std::cout << "| Timeout:             " << udpInfo.timeout << std::endl;
+        std::cout << "| Inode:               " << udpInfo.inode << std::endl;
+        std::cout << "| Reference Count:     " << udpInfo.ref << std::endl;
+        std::cout << "| Pointer:             " << udpInfo.pointer << std::endl;
+        std::cout << "| Dropped Packets:     " << udpInfo.drops << std::endl;
+        std::cout << "=============================" << std::endl;
+    }
+}
+
+void CNetworkAnalyzer::displayNetworkInfos(const int pid, const struct SNetworkInfo *net)
+{
+	displayTcpInfo(pid, net->_tcp);
+	displayUdpInfo(pid, net->_udp);
+}
+
+
+bool CNetworkAnalyzer::isLegitimateConnection(const struct SNetworkInfo* networkInfo)
+{
+    if (networkInfo == nullptr) {
+        std::cerr << "Invalid networkInfo pointer." << std::endl;
+        return false;
+    }
+    // Example criteria: Connection is unusual if the local port is less than 1024 and it's not in the well-known ports range.
+
+    const bool unusualTcp = (networkInfo->_tcp.remotePort < 1024 && isWellKnownPort(networkInfo->_tcp.remotePort));
+    const bool unusualUdp = (networkInfo->_udp.remotePort < 1024 && isWellKnownPort(networkInfo->_udp.remotePort));
+
+    return unusualTcp && unusualUdp;
+}
+
+bool CNetworkAnalyzer::isWellKnownPort(unsigned int port)
+{
+    // Example: Define the well-known ports range (0-1023)
+    return (port >= 0 && port <= 1023);
+}
+
     
 #endif // NETWORK_ANALYZER_H

@@ -7,6 +7,14 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <array>
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
 
 #include "processManager.h"
 #include "../config/config.h"
@@ -29,9 +37,8 @@ struct STcpInfo
     int ref;
     std::string pointer;
     int drops;
-    std::string localPort; // Add localPort member
-    std::string remotePort; // Add remotePort member
-    // Add other members as needed.
+    unsigned int localPort;
+    unsigned int remotePort;
 };
 
 // Structure to hold UDP connection information.
@@ -52,9 +59,8 @@ struct SUdpInfo
     int ref;
     std::string pointer;
     int drops;
-    std::string localPort; // Add localPort member
-    std::string remotePort; // Add remotePort member
-    // Add other members as needed.
+    unsigned int localPort;
+    unsigned int remotePort;
 };
 
 // Structure to hold Unix domain socket information.
@@ -62,7 +68,6 @@ struct SUnixInfo
 {
     std::string socketType;  // e.g., "DGRAM", "STREAM"
     std::string socketPath;
-    // Add other members as needed.
 };
 
 // Structure to hold overall network information.
@@ -71,7 +76,6 @@ struct SNetworkInfo
     struct STcpInfo _tcp;
     struct SUdpInfo _udp;
     struct SUnixInfo _unix;
-    // Add other members as needed.
 };
 
 
@@ -80,12 +84,22 @@ class CNetworkAnalyzer
 	public:
 		CNetworkAnalyzer();
 		void fillNetworkInfo(const int pid, struct SNetworkInfo *networkInfo);
-		bool isUnusualNetworkConnection(const struct SNetworkInfo *networkInfo);
-		void displayNetworkInfos(const struct SNetworkInfo *net);
+		bool isLegitimateConnection(const struct SNetworkInfo *networkInfo);
+		
+		void displayNetworkInfos(int pid,const struct SNetworkInfo *net);
 	private:
-		STcpInfo fillTcpInfo(const int pid);
-		SUdpInfo fillUdpInfo(const int pid);
-		SUnixInfo fillUnixInfo(const int pid);
+		template <typename T>
+		T fillInfo(const int pid, const std::string& protocol) const;
+		template <typename T>
+		bool isValidInfo(const T& info) const;
+		
+		void displayTcpInfo(const int pid, const STcpInfo& tcpInfo);
+		void displayUdpInfo(const int pid, const SUdpInfo& udpInfo);
+		
+		STcpInfo fillTcpInfo(const int pid) const;
+		SUdpInfo fillUdpInfo(const int pid) const;
+		//SUnixInfo fillUnixInfo(const int pid);
+		bool isWellKnownPort(unsigned int port);
 
 
 };
