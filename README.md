@@ -22,8 +22,9 @@ Flag processes exhibiting excessively high CPU usage.
 - [x] Abnormal Number of Threads:
 Identify processes with an abnormal number of threads.
 > As a criteria: process with high number of threads considered as a threat.
-- [ ] Unusual Network Connections:
-Monitor network connections associated with processes. Suspicious connections to unknown or suspicious IP addresses may indicate malicious activity.
+- [x] Unusual Network Connections:
+Monitor network connections associated with processes. Suspicious connections to unknown or suspicious ports may indicate malicious activity.
+> As a criteria: a pcocess remote port should be in [0 1024].
 - [ ] Long Running Sessions:
 Processes that have been running for unusually long durations. Long-running processes might be indicative of a problem or compromise.
 

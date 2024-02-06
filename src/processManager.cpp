@@ -59,7 +59,7 @@ void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int p
  */
 void CProcessManager::displayProcessInfo(const SProcessInfo* info)
 {
-    std::cout << "========== PROCESS INFO =========" << std::endl;
+    std::cout << "========== PROCESS INFO ==========" << std::endl;
     std::cout << "| Name:\t\t\t" << info->name << std::endl;
     std::cout << "| Umask:\t\t" << info->umask << std::endl;
     std::cout << "| State:\t\t" << info->state << std::endl;

@@ -25,19 +25,21 @@ void processThread(int processId)
     processManager.fillCPUUsage(processId, &processInfos);
     networkAnalyzer.fillNetworkInfo(processId, &networkInfos);
 
-    if (!processManager.isLegitimateProcessName(&processInfos, filePath) &&
-        processManager.isUnexpectedPPID(processInfos.ppid, expectedPPIDs) &&
-        processManager.isHighCPUUsage(&processInfos) &&
-        processManager.isAbnormalNumThreads(processInfos.threads) &&
-        !networkAnalyzer.isLegitimateConnection(&networkInfos))
+    if (
+        (processManager.isLegitimateProcessName(&processInfos, filePath) &&
+        networkAnalyzer.isLegitimateConnection(&networkInfos)) &&
+        (!processManager.isUnexpectedPPID(processInfos.ppid, expectedPPIDs) ||
+        !processManager.isHighCPUUsage(&processInfos) ||
+        !processManager.isAbnormalNumThreads(processInfos.threads))
+        )
     {
-        printf("PID:%d is NOT LEGITIMATE\n", processId); 
+        printf("PID:%d is LEGITIMATE\n", processId); 
         processManager.displayProcessInfo(&processInfos);
         networkAnalyzer.displayNetworkInfos(processId, &networkInfos);
     }
     else
     {
-        printf("PID:%d is LEGITIMATE\n", processId);
+        printf("PID:%d is NOT LEGITIMATE\n", processId);
         processManager.displayProcessInfo(&processInfos);
         networkAnalyzer.displayNetworkInfos(processId, &networkInfos);
     }
@@ -58,7 +60,7 @@ int main()
 
     std::vector<std::thread> threads;
 
-    for (int i = 0; i < 20; i += numThreads)
+    for (int i = 0; i < totalProcesses; i += numThreads)
     {
         // Launch threads, each handling a portion of the processes
         for (int j = 0; j < numThreads && i + j < totalProcesses; ++j) {

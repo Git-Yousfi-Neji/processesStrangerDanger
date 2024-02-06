@@ -125,7 +125,7 @@ void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
     {
     	std::cout << "Processing Tcp for PID: " << pid << std::endl;
 
-        std::cout << "=========== TCP INFO =========" << std::endl;
+        std::cout << "=========== TCP INFO =============" << std::endl;
         std::cout << "| Socket ID:           " << tcpInfo.sl << std::endl;
         std::cout << "| Local Address:       " << tcpInfo.localAddress << std::endl;
         std::cout << "| Local Port:          " << tcpInfo.localPort << std::endl;
@@ -143,7 +143,7 @@ void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
         std::cout << "| Reference Count:     " << tcpInfo.ref << std::endl;
         std::cout << "| Pointer:             " << tcpInfo.pointer << std::endl;
         std::cout << "| Dropped Packets:     " << tcpInfo.drops << std::endl;
-        std::cout << "=============================" << std::endl;
+        std::cout << "==================================" << std::endl; 
     }
 }
 
@@ -153,7 +153,7 @@ void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
     {
     	std::cout << "Processing Udp for PID: " << pid << std::endl;
 
-        std::cout << "=========== UDP INFO =========" << std::endl;
+        std::cout << "=========== UDP INFO =============" << std::endl;
         std::cout << "| Socket ID:           " << udpInfo.sl << std::endl;
         std::cout << "| Local Address:       " << udpInfo.localAddress << std::endl;
         std::cout << "| Local Port:          " << udpInfo.localPort << std::endl;
@@ -171,7 +171,7 @@ void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
         std::cout << "| Reference Count:     " << udpInfo.ref << std::endl;
         std::cout << "| Pointer:             " << udpInfo.pointer << std::endl;
         std::cout << "| Dropped Packets:     " << udpInfo.drops << std::endl;
-        std::cout << "=============================" << std::endl;
+        std::cout << "==================================" << std::endl;
     }
 }
 
@@ -198,7 +198,6 @@ bool CNetworkAnalyzer::isLegitimateConnection(const struct SNetworkInfo* network
 
 bool CNetworkAnalyzer::isWellKnownPort(unsigned int port)
 {
-    // Example: Define the well-known ports range (0-1023)
     return (port <= 1023);
 }
 
