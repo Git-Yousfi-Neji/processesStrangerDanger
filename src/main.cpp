@@ -9,7 +9,8 @@
 
 const char *filePath = "data/systemUsernames.xml";
 
-void processThread(int processId) {
+void processThread(int processId)
+{
     CProcessManager processManager;
     CNetworkAnalyzer networkAnalyzer;
     
@@ -34,29 +35,28 @@ void processThread(int processId) {
     }
     else
     {
-    	/*
         printf("PID:%d is LEGITIMATE\n", processId);
         processManager.displayProcessInfo(&processInfos);
         networkAnalyzer.displayNetworkInfos(processId, &networkInfos);
-        */
     }
     printf ("\n**********************************************\n\n");
 }
 
-int main() {
+int main()
+{
     auto start = std::chrono::high_resolution_clock::now();
 
     CProcessManager processManager;
     
     int processIds[PROCESS_MANAGER_MAX_PROCESSES];
     int totalProcesses = processManager.countAndStoreProcesses(processIds);
-
-    // Specify the number of threads you want to use
-    const int numThreads = 8;  // Adjust this based on your system and workload
+    
+    const int numThreads = SYSTEM_MAX_THREADS;
 
     std::vector<std::thread> threads;
 
-    for (int i = 0; i < totalProcesses; i += numThreads) {
+    for (int i = 0; i < totalProcesses; i += numThreads)
+    {
         // Launch threads, each handling a portion of the processes
         for (int j = 0; j < numThreads && i + j < totalProcesses; ++j) {
             threads.emplace_back(processThread, processIds[i + j]);

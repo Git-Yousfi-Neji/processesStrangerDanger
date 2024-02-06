@@ -19,4 +19,6 @@
 #define PROCESS_MANAGER_PROC_DIR                  "/proc"
 #define PROCESS_MANAGER_CPU_USAGE_SCRIPT          "scripts/total_cpu_usage.sh"
 
+#define SYSTEM_MAX_THREADS						8
+
 #endif // CONFIG_H
