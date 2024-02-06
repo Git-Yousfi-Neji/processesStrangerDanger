@@ -199,7 +199,7 @@ bool CNetworkAnalyzer::isLegitimateConnection(const struct SNetworkInfo* network
 bool CNetworkAnalyzer::isWellKnownPort(unsigned int port)
 {
     // Example: Define the well-known ports range (0-1023)
-    return (port >= 0 && port <= 1023);
+    return (port <= 1023);
 }
 
     
