@@ -6,6 +6,8 @@
 #include "../include/processManager.h"
 #include "../include/networkAnalyzer.h"
 #include "../include/xml_parser.h"
+#include "../config/config.in"
+#include "../config/config.h"
 
 const char *filePath = "data/systemUsernames.xml";
 
@@ -44,8 +46,9 @@ void processThread(int processId)
 
 int main()
 {
+	#ifdef CONFIG_WITH_EXECUTION_TIME
     auto start = std::chrono::high_resolution_clock::now();
-
+    #endif
     CProcessManager processManager;
     
     int processIds[PROCESS_MANAGER_MAX_PROCESSES];
@@ -55,7 +58,7 @@ int main()
 
     std::vector<std::thread> threads;
 
-    for (int i = 0; i < totalProcesses; i += numThreads)
+    for (int i = 0; i < 20; i += numThreads)
     {
         // Launch threads, each handling a portion of the processes
         for (int j = 0; j < numThreads && i + j < totalProcesses; ++j) {
@@ -70,11 +73,12 @@ int main()
         // Clear the threads vector for the next iteration
         threads.clear();
     }
-
+    
+    #ifdef CONFIG_WITH_EXECUTION_TIME
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     
     std::cout << "Execution time: " << duration.count() << " milliseconds" << std::endl;
-
+    #endif
     return 0;
 }
