@@ -28,7 +28,7 @@ void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int p
     if (file == NULL)
     {
         perror("Error opening file\n");
-        exit(EXIT_FAILURE);
+        return;
     }
 
     char line[PROCESS_MANAGER_MAX_LINE_SIZE];
@@ -90,7 +90,7 @@ int CProcessManager::countAndStoreProcesses(int* processIds)
     if (procDir == NULL)
     {
         perror("Error opening /proc directory\n");
-        exit(EXIT_FAILURE);
+        return -1;
     }
 
     while ((entry = readdir(procDir)) != NULL)
@@ -145,7 +145,7 @@ void CProcessManager::fillCPUUsage(int pid, struct SProcessInfo *processInfo)
     if (pipe == NULL)
     {
         perror("popen");
-        exit(EXIT_FAILURE);
+        return;
     }
 
     char buffer[PROCESS_MANAGER_MAX_BUFFER_SIZE];
