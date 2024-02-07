@@ -6,7 +6,6 @@
 #include "../include/processManager.h"
 #include "../include/networkAnalyzer.h"
 #include "../include/xml_parser.h"
-#include "../config/config.in"
 #include "../config/config.h"
 
 const char *filePath = "data/systemUsernames.xml";
@@ -48,7 +47,7 @@ void processThread(int processId)
 
 int main()
 {
-	#ifdef CONFIG_WITH_EXECUTION_TIME
+	#if CONFIG_WITH_EXECUTION_TIME
     auto start = std::chrono::high_resolution_clock::now();
     #endif
     CProcessManager processManager;
@@ -76,7 +75,7 @@ int main()
         threads.clear();
     }
     
-    #ifdef CONFIG_WITH_EXECUTION_TIME
+    #if CONFIG_WITH_EXECUTION_TIME
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     

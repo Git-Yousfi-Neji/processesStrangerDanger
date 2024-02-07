@@ -21,4 +21,6 @@
 
 #define SYSTEM_MAX_THREADS						8
 
+#define CONFIG_WITH_EXECUTION_TIME 1
+
 #endif // CONFIG_H

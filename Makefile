@@ -1,11 +1,6 @@
 CXX := g++
 CXXFLAGS := -Wall -Wextra -std=c++17 -O2
-INCLUDES := -I/include/ -I/usr/include/libxml2/ -I/config/
--include config.in
-
-ifdef TOKEN_X
-CXXFLAGS += -DCONFIG_WITH_EXECUTION_TIME=$(CONFIG_WITH_EXECUTION_TIME)
-endif
+INCLUDES := -I/include/ -I/usr/include/libxml2/ -I/config
 
 SRCS := $(wildcard src/*.cpp)
 OBJS := $(patsubst src/%.cpp, obj/%.o, $(SRCS))

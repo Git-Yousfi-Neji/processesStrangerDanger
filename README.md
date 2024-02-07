@@ -40,10 +40,9 @@ Processes that have been running for unusually long durations. Long-running proc
 
 ## Features
 
-- Monitors running processes.
-- Identifies processes associated with uncommon or unauthorized users.
-- Analyzes process behavior for security anomalies.
-- Logs and reports potential security threats.
+- [x] Identifies processes associated with uncommon or unauthorized users.
+- [x] Analyzes process behavior for security anomalies.
+- [ ] Logs and reports potential security threats.
 
 ## Project Structure
 ```
@@ -51,17 +50,15 @@ processesStrangerDanger
 ├── bin
 │   └── processesStrangerDanger
 ├── config
-│   └── config.h
+│   ├── config.h
+│   └── config.in
 ├── data
 │   ├── log
-│   ├── systemUsernames.db
 │   └── systemUsernames.xml
 ├── include
 │   ├── networkAnalyzer.h
 │   ├── processManager.h
-│   ├── userAnalyzer.h
 │   └── xml_parser.h
-├── lib
 ├── LICENSE
 ├── Makefile
 ├── obj
@@ -71,23 +68,20 @@ processesStrangerDanger
 │   ├── networkAnalyzer.o
 │   ├── processManager.d
 │   ├── processManager.o
-│   ├── userAnalyzer.d
-│   ├── userAnalyzer.o
 │   ├── xml_parser.d
 │   └── xml_parser.o
 ├── python_scripts
-│   └── add_process_names_to_db.py
+│   └── parse_tcp_udp.py
 ├── README.md
 ├── scripts
 │   ├── add_process_name_to_xml.sh
 │   ├── get_ppids.sh
-│   ├── stress_cpu.sh
+│   ├── printStructs.sh
 │   └── total_cpu_usage.sh
 └── src
     ├── main.cpp
     ├── networkAnalyzer.cpp
     ├── processManager.cpp
-    ├── userAnalyzer.cpp
     └── xml_parser.c
 ```
 ## Getting Started
@@ -96,7 +90,6 @@ To get started with **processesStrangerDanger**, follow these steps:
 0. Install libxml used to parse xml files
 > sudo apt-get install libxml2-dev
 > sudo apt-get install inotify-tools
-> sudo apt-get install stress
 > pip install xmltodict
 > pip install tabulate
 
@@ -117,7 +110,7 @@ Run the executable to start monitoring processes and analyzing potential securit
 > ./bin/processesStrangerDanger
 
 ## Configuration
-Adjust the project's configuration in the config/config.h, to suit your needs.
+Adjust the project's configuration in the config/config.h and config.in, to suit your needs.
 
 ## Contributing
 Feel free to contribute to this project. Fork the repository, make your changes, and submit a pull request.

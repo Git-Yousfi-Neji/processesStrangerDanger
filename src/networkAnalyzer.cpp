@@ -9,17 +9,36 @@ CNetworkAnalyzer::CNetworkAnalyzer()
 	
 }
 
+/**
+ * @brief Retrieves TCP information for a given process ID.
+ *
+ * @param pid Process ID of the target process.
+ * @return STcpInfo Structure containing TCP information.
+ */
 STcpInfo CNetworkAnalyzer::fillTcpInfo(const int pid) const
 {
     return fillInfo<struct STcpInfo>(pid, "tcp");
 }
 
-
+/**
+ * @brief Retrieves UDP information for a given process ID.
+ *
+ * @param pid Process ID of the target process.
+ * @return SUdpInfo Structure containing UDP information.
+ */
 SUdpInfo CNetworkAnalyzer::fillUdpInfo(const int pid) const
 {
     return fillInfo<struct SUdpInfo>(pid, "udp");
 }
 
+/**
+ * @brief Template function to fill information for a given process ID and protocol.
+ *
+ * @tparam T Type of the structure containing information.
+ * @param pid Process ID of the target process.
+ * @param protocol Protocol string ("tcp" or "udp").
+ * @return T Structure containing information.
+ */
 template <typename T>
 T CNetworkAnalyzer::fillInfo(const int pid, const std::string& protocol) const
 {
@@ -89,6 +108,13 @@ T CNetworkAnalyzer::fillInfo(const int pid, const std::string& protocol) const
     return info;
 }
 
+/**
+ * @brief Template function to check the validity of information.
+ *
+ * @tparam T Type of the structure containing information.
+ * @param info Structure containing information to be validated.
+ * @return bool True if information is valid, false otherwise.
+ */
 template <typename T>
 bool CNetworkAnalyzer::isValidInfo(const T& info) const
 {
@@ -103,8 +129,13 @@ bool CNetworkAnalyzer::isValidInfo(const T& info) const
     return true;
 }
 
-
-
+/**
+ * @brief Fills network information for a given process ID into a provided struct.
+ *
+ * @param pid Process ID of the target process.
+ * @param networkInfo Pointer to the struct to hold network information.
+ * @return Void
+ */
 void CNetworkAnalyzer::fillNetworkInfo(const int pid, SNetworkInfo* networkInfo)
 {
     STcpInfo tcpInfo = fillTcpInfo(pid);
@@ -119,6 +150,13 @@ void CNetworkAnalyzer::fillNetworkInfo(const int pid, SNetworkInfo* networkInfo)
         std::cerr << "Error: Invalid TCP or UDP information for PID " << pid << std::endl;
 }
 
+/**
+ * @brief Displays TCP information for a given process ID.
+ *
+ * @param pid Process ID of the target process.
+ * @param tcpInfo Structure containing TCP information.
+ * @return Void
+ */
 void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
 {
     if (isValidInfo(tcpInfo))
@@ -147,6 +185,13 @@ void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
     }
 }
 
+/**
+ * @brief Displays UDP information for a given process ID.
+ *
+ * @param pid Process ID of the target process.
+ * @param udpInfo Structure containing UDP information.
+ * @return Void
+ */
 void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
 {
     if (isValidInfo(udpInfo))
@@ -175,27 +220,45 @@ void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
     }
 }
 
+/**
+ * @brief Displays both TCP and UDP information for a given process ID.
+ *
+ * @param pid Process ID of the target process.
+ * @param net Pointer to the struct containing network information.
+ * @return Void
+ */
 void CNetworkAnalyzer::displayNetworkInfos(const int pid, const struct SNetworkInfo *net)
 {
 	displayTcpInfo(pid, net->_tcp);
 	displayUdpInfo(pid, net->_udp);
 }
 
-
+/**
+ * @brief Checks if a network connection is considered legitimate based on provided information.
+ *
+ * @param networkInfo Pointer to the struct containing network information.
+ * @return bool True if the connection is considered legitimate, false otherwise.
+ */
 bool CNetworkAnalyzer::isLegitimateConnection(const struct SNetworkInfo* networkInfo)
 {
-    if (networkInfo == nullptr) {
+    if (networkInfo == nullptr)
+    {
         std::cerr << "Invalid networkInfo pointer." << std::endl;
         return false;
     }
-    // Example criteria: Connection is unusual if the local port is less than 1024 and it's not in the well-known ports range.
-
+   
     const bool unusualTcp = (networkInfo->_tcp.remotePort < 1024 && isWellKnownPort(networkInfo->_tcp.remotePort));
     const bool unusualUdp = (networkInfo->_udp.remotePort < 1024 && isWellKnownPort(networkInfo->_udp.remotePort));
 
     return unusualTcp && unusualUdp;
 }
 
+/**
+ * @brief Checks if a given port number is considered a well-known port (<= 1023).
+ *
+ * @param port Port number to be checked.
+ * @return bool True if the port is a well-known port, false otherwise.
+ */
 bool CNetworkAnalyzer::isWellKnownPort(unsigned int port)
 {
     return (port <= 1023);
