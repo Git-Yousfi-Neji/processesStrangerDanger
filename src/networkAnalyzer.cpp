@@ -161,29 +161,78 @@ void CNetworkAnalyzer::displayTcpInfo(const int pid, const STcpInfo& tcpInfo)
 {
     if (isValidInfo(tcpInfo))
     {
-    	std::cout << "Processing Tcp for PID: " << pid << std::endl;
+    	
+#if CONFIG_WITH_LOGGING_FEATURE
 
-        std::cout << "=========== TCP INFO =============" << std::endl;
-        std::cout << "| Socket ID:           " << tcpInfo.sl << std::endl;
-        std::cout << "| Local Address:       " << tcpInfo.localAddress << std::endl;
-        std::cout << "| Local Port:          " << tcpInfo.localPort << std::endl;
-        std::cout << "| Remote Address:      " << tcpInfo.rem_address << std::endl;
-        std::cout << "| Remote Port:         " << tcpInfo.remotePort << std::endl;
-        std::cout << "| Connection State:    " << tcpInfo.st << std::endl;
-        std::cout << "| TX Queue Size:       " << tcpInfo.tx_queue << std::endl;
-        std::cout << "| RX Queue Size:       " << tcpInfo.rx_queue << std::endl;
-        std::cout << "| Timer Active:        " << tcpInfo.tr << std::endl;
-        std::cout << "| Timer Expires:       " << tcpInfo.tm_when << std::endl;
-        std::cout << "| Retransmission Count:" << tcpInfo.retrnsmt << std::endl;
-        std::cout << "| User ID:             " << tcpInfo.uid << std::endl;
-        std::cout << "| Timeout:             " << tcpInfo.timeout << std::endl;
-        std::cout << "| Inode:               " << tcpInfo.inode << std::endl;
-        std::cout << "| Reference Count:     " << tcpInfo.ref << std::endl;
-        std::cout << "| Pointer:             " << tcpInfo.pointer << std::endl;
-        std::cout << "| Dropped Packets:     " << tcpInfo.drops << std::endl;
-        std::cout << "==================================" << std::endl; 
+        std::ofstream logFile(LOG_FILE_PATH, std::ios_base::app);
+
+        if (!logFile.is_open())
+        {
+            std::cerr << "Error opening "<< LOG_FILE_PATH << std::endl;
+            perror("Error details: ");
+            return;
+        }
+        
+        std::streambuf *originalCoutBuffer = std::cout.rdbuf();
+        
+        std::ostream console(std::cout.rdbuf());  // Create a separate console stream
+        std::ostream logStream(logFile.rdbuf());   // Create a separate log stream
+#else
+        std::ostream& console = std::cout;
+#endif
+
+        console << "Processing Tcp for PID: " << pid << std::endl;
+        console << "=========== TCP INFO =============" << std::endl;
+        console << "| Socket ID:           " << tcpInfo.sl << std::endl;
+        console << "| Local Address:       " << tcpInfo.localAddress << std::endl;
+        console << "| Local Port:          " << tcpInfo.localPort << std::endl;
+        console << "| Remote Address:      " << tcpInfo.rem_address << std::endl;
+        console << "| Remote Port:         " << tcpInfo.remotePort << std::endl;
+        console << "| Connection State:    " << tcpInfo.st << std::endl;
+        console << "| TX Queue Size:       " << tcpInfo.tx_queue << std::endl;
+        console << "| RX Queue Size:       " << tcpInfo.rx_queue << std::endl;
+        console << "| Timer Active:        " << tcpInfo.tr << std::endl;
+        console << "| Timer Expires:       " << tcpInfo.tm_when << std::endl;
+        console << "| Retransmission Count:" << tcpInfo.retrnsmt << std::endl;
+        console << "| User ID:             " << tcpInfo.uid << std::endl;
+        console << "| Timeout:             " << tcpInfo.timeout << std::endl;
+        console << "| Inode:               " << tcpInfo.inode << std::endl;
+        console << "| Reference Count:     " << tcpInfo.ref << std::endl;
+        console << "| Pointer:             " << tcpInfo.pointer << std::endl;
+        console << "| Dropped Packets:     " << tcpInfo.drops << std::endl;
+        console << "==================================" << std::endl;
+
+#if CONFIG_WITH_LOGGING_FEATURE
+
+        logStream << "Processing Tcp for PID: " << pid << std::endl;
+        logStream << "=========== TCP INFO =============" << std::endl;
+        logStream << "| Socket ID:           " << tcpInfo.sl << std::endl;
+        logStream << "| Local Address:       " << tcpInfo.localAddress << std::endl;
+        logStream << "| Local Port:          " << tcpInfo.localPort << std::endl;
+        logStream << "| Remote Address:      " << tcpInfo.rem_address << std::endl;
+        logStream << "| Remote Port:         " << tcpInfo.remotePort << std::endl;
+        logStream << "| Connection State:    " << tcpInfo.st << std::endl;
+        logStream << "| TX Queue Size:       " << tcpInfo.tx_queue << std::endl;
+        logStream << "| RX Queue Size:       " << tcpInfo.rx_queue << std::endl;
+        logStream << "| Timer Active:        " << tcpInfo.tr << std::endl;
+        logStream << "| Timer Expires:       " << tcpInfo.tm_when << std::endl;
+        logStream << "| Retransmission Count:" << tcpInfo.retrnsmt << std::endl;
+        logStream << "| User ID:             " << tcpInfo.uid << std::endl;
+        logStream << "| Timeout:             " << tcpInfo.timeout << std::endl;
+        logStream << "| Inode:               " << tcpInfo.inode << std::endl;
+        logStream << "| Reference Count:     " << tcpInfo.ref << std::endl;
+        logStream << "| Pointer:             " << tcpInfo.pointer << std::endl;
+        logStream << "| Dropped Packets:     " << tcpInfo.drops << std::endl;
+        logStream << "==================================" << std::endl;
+        
+        std::cout.rdbuf(originalCoutBuffer);
+        logFile.close();
+        
+#endif
+
     }
 }
+
 
 /**
  * @brief Displays UDP information for a given process ID.
@@ -196,29 +245,79 @@ void CNetworkAnalyzer::displayUdpInfo(const int pid, const SUdpInfo& udpInfo)
 {
     if (isValidInfo(udpInfo))
     {
-    	std::cout << "Processing Udp for PID: " << pid << std::endl;
+    	
+#if CONFIG_WITH_LOGGING_FEATURE
+        
+        std::ofstream logFile(LOG_FILE_PATH, std::ios_base::app);
 
-        std::cout << "=========== UDP INFO =============" << std::endl;
-        std::cout << "| Socket ID:           " << udpInfo.sl << std::endl;
-        std::cout << "| Local Address:       " << udpInfo.localAddress << std::endl;
-        std::cout << "| Local Port:          " << udpInfo.localPort << std::endl;
-        std::cout << "| Remote Address:      " << udpInfo.rem_address << std::endl;
-        std::cout << "| Remote Port:         " << udpInfo.remotePort << std::endl;
-        std::cout << "| Connection State:    " << udpInfo.st << std::endl;
-        std::cout << "| TX Queue Size:       " << udpInfo.tx_queue << std::endl;
-        std::cout << "| RX Queue Size:       " << udpInfo.rx_queue << std::endl;
-        std::cout << "| Timer Active:        " << udpInfo.tr << std::endl;
-        std::cout << "| Timer Expires:       " << udpInfo.tm_when << std::endl;
-        std::cout << "| Retransmission Count:" << udpInfo.retrnsmt << std::endl;
-        std::cout << "| User ID:             " << udpInfo.uid << std::endl;
-        std::cout << "| Timeout:             " << udpInfo.timeout << std::endl;
-        std::cout << "| Inode:               " << udpInfo.inode << std::endl;
-        std::cout << "| Reference Count:     " << udpInfo.ref << std::endl;
-        std::cout << "| Pointer:             " << udpInfo.pointer << std::endl;
-        std::cout << "| Dropped Packets:     " << udpInfo.drops << std::endl;
-        std::cout << "==================================" << std::endl;
+        if (!logFile.is_open())
+        {
+            std::cerr << "Error opening "<< LOG_FILE_PATH << std::endl;
+            perror("Error details: ");
+            return;
+        }
+        
+        std::streambuf *originalCoutBuffer = std::cout.rdbuf();
+        
+        std::ostream console(std::cout.rdbuf());  // Create a separate console stream
+        std::ostream logStream(logFile.rdbuf());   // Create a separate log stream
+        
+#else
+        std::ostream& console = std::cout;
+#endif
+
+        console << "Processing Udp for PID: " << pid << std::endl;
+        console << "=========== UDP INFO =============" << std::endl;
+        console << "| Socket ID:           " << udpInfo.sl << std::endl;
+        console << "| Local Address:       " << udpInfo.localAddress << std::endl;
+        console << "| Local Port:          " << udpInfo.localPort << std::endl;
+        console << "| Remote Address:      " << udpInfo.rem_address << std::endl;
+        console << "| Remote Port:         " << udpInfo.remotePort << std::endl;
+        console << "| Connection State:    " << udpInfo.st << std::endl;
+        console << "| TX Queue Size:       " << udpInfo.tx_queue << std::endl;
+        console << "| RX Queue Size:       " << udpInfo.rx_queue << std::endl;
+        console << "| Timer Active:        " << udpInfo.tr << std::endl;
+        console << "| Timer Expires:       " << udpInfo.tm_when << std::endl;
+        console << "| Retransmission Count:" << udpInfo.retrnsmt << std::endl;
+        console << "| User ID:             " << udpInfo.uid << std::endl;
+        console << "| Timeout:             " << udpInfo.timeout << std::endl;
+        console << "| Inode:               " << udpInfo.inode << std::endl;
+        console << "| Reference Count:     " << udpInfo.ref << std::endl;
+        console << "| Pointer:             " << udpInfo.pointer << std::endl;
+        console << "| Dropped Packets:     " << udpInfo.drops << std::endl;
+        console << "==================================" << std::endl;
+
+#if CONFIG_WITH_LOGGING_FEATURE
+
+        logStream << "Processing Udp for PID: " << pid << std::endl;
+        logStream << "=========== UDP INFO =============" << std::endl;
+        logStream << "| Socket ID:           " << udpInfo.sl << std::endl;
+        logStream << "| Local Address:       " << udpInfo.localAddress << std::endl;
+        logStream << "| Local Port:          " << udpInfo.localPort << std::endl;
+        logStream << "| Remote Address:      " << udpInfo.rem_address << std::endl;
+        logStream << "| Remote Port:         " << udpInfo.remotePort << std::endl;
+        logStream << "| Connection State:    " << udpInfo.st << std::endl;
+        logStream << "| TX Queue Size:       " << udpInfo.tx_queue << std::endl;
+        logStream << "| RX Queue Size:       " << udpInfo.rx_queue << std::endl;
+        logStream << "| Timer Active:        " << udpInfo.tr << std::endl;
+        logStream << "| Timer Expires:       " << udpInfo.tm_when << std::endl;
+        logStream << "| Retransmission Count:" << udpInfo.retrnsmt << std::endl;
+        logStream << "| User ID:             " << udpInfo.uid << std::endl;
+        logStream << "| Timeout:             " << udpInfo.timeout << std::endl;
+        logStream << "| Inode:               " << udpInfo.inode << std::endl;
+        logStream << "| Reference Count:     " << udpInfo.ref << std::endl;
+        logStream << "| Pointer:             " << udpInfo.pointer << std::endl;
+        logStream << "| Dropped Packets:     " << udpInfo.drops << std::endl;
+        logStream << "==================================" << std::endl;
+        
+        std::cout.rdbuf(originalCoutBuffer);
+        logFile.close();
+        
+#endif
+
     }
 }
+
 
 /**
  * @brief Displays both TCP and UDP information for a given process ID.

@@ -42,7 +42,7 @@ Processes that have been running for unusually long durations. Long-running proc
 
 - [x] Identifies processes associated with uncommon or unauthorized users.
 - [x] Analyzes process behavior for security anomalies.
-- [ ] Logs and reports potential security threats.
+- [x] Logs and reports potential security threats.
 
 ## Project Structure
 ```

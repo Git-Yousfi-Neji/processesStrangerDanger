@@ -59,6 +59,7 @@ void CProcessManager::fillRunningProcessesInfos(struct SProcessInfo *info, int p
  */
 void CProcessManager::displayProcessInfo(const SProcessInfo* info)
 {
+	
     std::cout << "========== PROCESS INFO ==========" << std::endl;
     std::cout << "| Name:\t\t\t" << info->name << std::endl;
     std::cout << "| Umask:\t\t" << info->umask << std::endl;
@@ -73,7 +74,41 @@ void CProcessManager::displayProcessInfo(const SProcessInfo* info)
     std::cout << "| Threads:\t\t" << info->threads << std::endl;
     std::cout << "| CPU usage:\t\t" << info->cpuUsage << std::endl;
     std::cout << "==================================" << std::endl;
+
+#if CONFIG_WITH_LOGGING_FEATURE
+  
+    std::ofstream logFile(LOG_FILE_PATH, std::ios_base::app);
+
+    if (!logFile.is_open())
+    {
+        std::cerr << "Error opening "<< LOG_FILE_PATH << std::endl;
+        perror("Error details: ");
+        return;
+    }
+    
+    std::ostream logStream(logFile.rdbuf());   // Create a separate log stream
+
+    logStream << "========== PROCESS INFO ==========" << std::endl;
+    logStream << "| Name:\t\t\t" << info->name << std::endl;
+    logStream << "| Umask:\t\t" << info->umask << std::endl;
+    logStream << "| State:\t\t" << info->state << std::endl;
+    logStream << "| Tgid:\t\t\t" << info->tgid << std::endl;
+    logStream << "| PPid:\t\t\t" << info->ppid << std::endl;
+    logStream << "| Pid:\t\t\t" << info->pid << std::endl;
+    logStream << "| TracerPid:\t\t" << info->tracerPid << std::endl;
+    logStream << "| Uid:\t\t\t" << info->uid << std::endl;
+    logStream << "| Gid:\t\t\t" << info->gid << std::endl;
+    logStream << "| FDSize:\t\t" << info->fdSize << std::endl;
+    logStream << "| Threads:\t\t" << info->threads << std::endl;
+    logStream << "| CPU usage:\t\t" << info->cpuUsage << std::endl;
+    logStream << "==================================" << std::endl;
+    
+    logFile.close();
+    
+#endif
+
 }
+
 
 /** @brief Function to count and store all processes PIDs in
  *         the processIds array
